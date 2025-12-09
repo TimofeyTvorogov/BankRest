@@ -1,6 +1,12 @@
 package com.example.bankcards.dto;
 
-public record LoginRequest(String name, String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(
+        @NotBlank(message = "имя пользователя обязательно для заоплнения")
+        String name,
+        @NotBlank(message = "пароль обязателен для заполнения")
+        String password) {
 
 }
 

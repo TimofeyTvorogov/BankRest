@@ -46,7 +46,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    UrlBasedCorsConfigurationSource corsConfigurationSource(@Value("${security.cors.origin:/*}") String origin) {
+    UrlBasedCorsConfigurationSource corsConfigurationSource(@Value("${security.cors.origin:localhost:8080}") String origin) {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
