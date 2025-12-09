@@ -45,7 +45,7 @@ public class TtApplication {
 
 			var user1 = new User(null,common,"Yuri","12345");
 			var user2 = new User(null,common,"Max","9876");
-			var admin = new User(List.of(),privelleged,"Admin","qwerty");
+			var admin = new User(List.of(),privelleged,"Admin","$2a$12$6Im.lr46qotQ5iKlHU6S8eW5H.gEWD171k0.NuSHKFX6ivuzXL8aS");
 
 			var yuriCard1 = new Card("12345",user1, LocalDate.of(2028,10,1), Card.CardStatus.ACTIVE,1000d);
 			var yuriCard2 = new Card("45678",user1, LocalDate.now(), Card.CardStatus.EXPIRED,0d);

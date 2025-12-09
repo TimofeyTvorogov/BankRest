@@ -6,7 +6,9 @@
 #  - Указать порт приложения.
 #  - Настроить параметры безопасности и JWT.
 #  - Включить Swagger UI.
-
+security:
+  jwt:
+    secret: e1NaYl0+PTdvNkJeZm9KJV9kbV9kYk9SQ3JofGpkKCo=
 spring:
   application:
     name: tt_test
@@ -24,5 +26,11 @@ spring:
       org:
         hibernate:
           dialect:
-            PostgreSQLDialect:
+            PostgreSQLDialect
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+
+
 
