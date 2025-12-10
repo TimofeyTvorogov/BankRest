@@ -4,17 +4,21 @@ package com.example.bankcards.service;
 import com.example.bankcards.dto.UserRequest;
 import com.example.bankcards.dto.UserResponse;
 import com.example.bankcards.entity.Role;
+import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.UserNotFoundException;
 import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.util.mappers.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static com.example.bankcards.entity.Role.*;
 
 @Service
 @Slf4j
@@ -37,9 +41,8 @@ public class UserService {
         return mapper.toDto(user);
     }
 
-    public List<UserResponse> findAllUsers() {
-        userRepository.findAll().stream().map(mapper::toDto).forEach(userResponse -> log.info(userResponse.toString()));
-        return userRepository.findAll().stream().map(mapper::toDto).toList();
+    public List<UserResponse> findAllUsers(int pageNum, int size) {
+        return userRepository.findAll(PageRequest.of(pageNum,size)).stream().map(mapper::toDto).toList();
     }
 
     public void deleteUser(Long id) {
@@ -47,17 +50,23 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    //todo test
     public UserResponse createUser(UserRequest dto) {
-        var userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow();
-        var user = mapper.toEntityCustom(dto, encoder, userRole);
+        var user = mapper.toEntity(dto,encoder,roleRepository);
         return mapper.toDto(userRepository.save(user));
     }
 
-//    public UserResponse updateUser(UserRequest user) {
-//        if (!userRepository.existsByName(user.getName())) {
-//            var newUser = userRepository.save(user);
-//        }
-//    }
+    public UserResponse updateUser(Long id, UserRequest dto) {
+        var oldUser = userRepository.findById(id);
+        if (!oldUser.isPresent()) {
+            return createUser(dto);
+        }
+        User toUpdateUser = oldUser.get();
+        toUpdateUser.setName(dto.name());
+        toUpdateUser.setPassword(encoder.encode(dto.password()));
+        toUpdateUser.setRoles(mapper.mapRoles(dto.roles(),roleRepository));
+        return mapper.toDto(userRepository.save(toUpdateUser));
+    }
 }
 
 

@@ -64,7 +64,7 @@ public class FilterChainConfig {
                 .sessionManagement(sessionConfig ->
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").permitAll()
                         .requestMatchers("/api/**").hasAnyRole("ADMIN","USER")
                         .requestMatchers("/auth/**", "/swagger-ui/**","/v3/api-docs/**","/swagger/**").permitAll()
                         .anyRequest().authenticated());

@@ -3,8 +3,11 @@ package com.example.bankcards.controller.admin;
 
 import com.example.bankcards.dto.UserRequest;
 import com.example.bankcards.dto.UserResponse;
+import com.example.bankcards.entity.User;
 import com.example.bankcards.service.UserService;
+import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +28,11 @@ public class AdminUserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserResponse>> getUsers() {
-        return ResponseEntity.ok(userService.findAllUsers());
+    public ResponseEntity<List<UserResponse>> getUsers(
+            @RequestParam(name = "page",required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size",required = false, defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(userService.findAllUsers(page, size));
     }
 
     @PostMapping("/users")
@@ -41,15 +47,11 @@ public class AdminUserController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PutMapping("/users/{id}")
-//    public ResponseEntity<Void> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
-//
-//    }
-//
-//    @PatchMapping("/users/{id}")
-//    public ResponseEntity<Void> patchUser(@PathVariable("id") Long id) {
-//
-//    }
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable("id") Long id, @RequestBody UserRequest updateRequest) {
+        return ResponseEntity.ok( userService.updateUser(id,updateRequest));
+    }
 
 
+//todo implement @patch
 }
