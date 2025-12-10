@@ -1,4 +1,4 @@
-package com.example.bankcards.dto;
+package com.example.bankcards.dto.signup;
 
 public record SignupResponse(String token) {
 

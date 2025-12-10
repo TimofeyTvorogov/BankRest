@@ -1,9 +1,8 @@
 package com.example.bankcards.service;
 
 
-import com.example.bankcards.dto.UserRequest;
-import com.example.bankcards.dto.UserResponse;
-import com.example.bankcards.entity.Role;
+import com.example.bankcards.dto.admin.UserRequest;
+import com.example.bankcards.dto.admin.UserResponse;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.UserNotFoundException;
 import com.example.bankcards.repository.RoleRepository;
@@ -15,10 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-
-import static com.example.bankcards.entity.Role.*;
 
 @Service
 @Slf4j

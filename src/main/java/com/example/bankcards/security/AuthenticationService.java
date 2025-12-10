@@ -1,8 +1,8 @@
 package com.example.bankcards.security;
 
 
-import com.example.bankcards.dto.LoginRequest;
-import com.example.bankcards.dto.LoginResponse;
+import com.example.bankcards.dto.auth.LoginRequest;
+import com.example.bankcards.dto.auth.LoginResponse;
 import com.example.bankcards.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

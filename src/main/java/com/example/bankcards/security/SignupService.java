@@ -1,7 +1,7 @@
 package com.example.bankcards.security;
 
-import com.example.bankcards.dto.SignupRequest;
-import com.example.bankcards.dto.SignupResponse;
+import com.example.bankcards.dto.signup.SignupRequest;
+import com.example.bankcards.dto.signup.SignupResponse;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.repository.UserRepository;

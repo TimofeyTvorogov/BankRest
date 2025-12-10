@@ -1,13 +1,12 @@
 package com.example.bankcards.util.mappers;
 
 
-import com.example.bankcards.dto.SignupRequest;
+import com.example.bankcards.dto.signup.SignupRequest;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 

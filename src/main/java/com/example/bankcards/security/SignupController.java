@@ -1,7 +1,7 @@
 package com.example.bankcards.security;
 
-import com.example.bankcards.dto.SignupRequest;
-import com.example.bankcards.dto.SignupResponse;
+import com.example.bankcards.dto.signup.SignupRequest;
+import com.example.bankcards.dto.signup.SignupResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

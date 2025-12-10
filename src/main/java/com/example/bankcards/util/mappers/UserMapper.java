@@ -1,8 +1,8 @@
 package com.example.bankcards.util.mappers;
 
 
-import com.example.bankcards.dto.UserRequest;
-import com.example.bankcards.dto.UserResponse;
+import com.example.bankcards.dto.admin.UserRequest;
+import com.example.bankcards.dto.admin.UserResponse;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.repository.RoleRepository;
