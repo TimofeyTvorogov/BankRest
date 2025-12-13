@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: seed-users-data
+      author: dev
+      changes:
+        - loadUpdateData:
+            tableName: users
+            primaryKey: name
+            file: db/migration/data/users.csv
+            separator: ","
+            encoding: UTF-8

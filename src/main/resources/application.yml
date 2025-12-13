@@ -1,18 +1,10 @@
-##
-## application.yml — главный конфигурационный файл Spring Boot.
-#
-#Что нужно сделать:
-#  - Указать настройки подключения к базе данных.
-#  - Указать порт приложения.
-#  - Настроить параметры безопасности и JWT.
-#  - Включить Swagger UI.
-security:
-  jwt:
-    secret: e1NaYl0+PTdvNkJeZm9KJV9kbV9kYk9SQ3JofGpkKCo=
+
+server:
+  port: 8080
+
 spring:
   application:
     name: tt_test
-
   datasource:
     url: jdbc:postgresql://localhost:5432/db
     driver-class-name: org.postgresql.Driver
@@ -21,16 +13,86 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     database-platform:
-      org:
-        hibernate:
-          dialect:
-            PostgreSQLDialect
+      org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/migration/changelog-master.yaml
+    contexts: dev
+    drop-first: false
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 100
+        one-indexed-parameters: false
+
+
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    config-url: /api-docs/swagger-config
+    operations-sorter: alpha
+    tags-sorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+    filter: true
+    persist-authorization: true
+    default-models-expand-depth: 3
+    default-model-expand-depth: 3
+    display-operation-id: false
+    url: ${springdoc.api-docs.path}
+  packages-to-scan:
+    - com.example.bankcards.controller
+    - com.example.bankcards.security.controller
+  paths-to-match:
+    - /api/**
+    - /auth/**
+  cache:
+    disabled: true
+
+  show-actuator: false
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+security:
+  jwt:
+    secret: e1NaYl0+PTdvNkJeZm9KJV9kbV9kYk9SQ3JofGpkKCo=
+    lifetime: 1800000
+    issuer: auth_service
+
+  publicPaths:
+    - /auth/**
+    - /swagger-ui/**
+    - /swagger-ui.html
+    - ${springdoc.api-docs.path}/**
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+    allowed-headers:
+      - "*"
+    allow-credentials: false
+    max-age: 3600000
+
 logging:
   level:
-    org.springframework.security: DEBUG
-    org.springframework.web: DEBUG
-
-
-
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.example.bankcards: DEBUG
+  file:
+    name: logs/app.log

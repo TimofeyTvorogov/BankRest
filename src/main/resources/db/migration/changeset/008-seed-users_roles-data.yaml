@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: seed-users_roles-data
+      author: dev
+      changes:
+        - loadUpdateData:
+            tableName: users_roles
+            primaryKey: user_id,role_id
+            file: db/migration/data/users_roles.csv
+            separator: ","
+            encoding: UTF-8

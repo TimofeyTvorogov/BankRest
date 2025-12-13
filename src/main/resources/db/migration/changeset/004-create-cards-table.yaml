@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-cards-table
+      author: dev
+      changes:
+        - createTable:
+            schemaName: public
+            tableName: cards
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_num
+                  type: varchar(16)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: active_till
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  defaultValue: "ACTIVE"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: numeric(19,2)
+                  defaultValueNumeric: 0.00
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: add-cards-fk-to-users
+      author: dev
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: fk_cards_user_id
+            baseTableName: cards
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+  - changeSet:
+      id: add-cards-check-constraints
+      author: dev
+      comment: "Проверки по таблице"
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE cards 
+              ADD CONSTRAINT chk_cards_status 
+              CHECK (status IN ('ACTIVE', 'BLOCKED', 'EXPIRED'));
+            comment: Проверка статуса карты
+        - sql:
+            sql: |
+              ALTER TABLE cards 
+              ADD CONSTRAINT chk_cards_balance_non_negative 
+              CHECK (balance >= 0);
+            comment: Проверка неотрицательного баланса
+        - sql:
+            sql: |
+              ALTER TABLE cards 
+              ADD CONSTRAINT chk_cards_card_num_length 
+              CHECK (LENGTH(card_num) = 16);
+            comment: Проверка длины номера карты

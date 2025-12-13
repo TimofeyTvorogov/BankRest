@@ -3,6 +3,7 @@ package com.example.bankcards.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,18 +47,17 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    UrlBasedCorsConfigurationSource corsConfigurationSource(@Value("${security.cors.origin:localhost:8080}") String origin) {
+    UrlBasedCorsConfigurationSource corsConfigurationSource(CorsProperties properties) {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedOrigins(List.of(origin));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setMaxAge(Duration.ofHours(1));
-        configuration.setAllowCredentials(false);
+        configuration.setAllowedMethods(properties.getAllowedMethods());
+        configuration.setAllowedOrigins(properties.getAllowedOrigins());
+        configuration.setAllowedHeaders(properties.getAllowedHeaders());
+        configuration.setMaxAge(Duration.ofMillis(properties.getMaxAge()));
+        configuration.setAllowCredentials(properties.getAllowCredentials());
 
         UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
         configurationSource.registerCorsConfiguration("/**", configuration);
-
 
         return configurationSource;
     }

@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: seed-cards-data
+      author: dev
+      changes:
+        - loadUpdateData:
+            tableName: cards
+            primaryKey: card_num
+            file: db/migration/data/cards.csv
+            separator: ","
+            encoding: UTF-8

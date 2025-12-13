@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-role-table
+      author: dev
+      changes:
+        - createTable:
+            schemaName: public
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+                  defaultValue: "ROLE_USER"
+
+  - changeSet:
+      id: add-role-name-check-constraint
+      author: dev
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE roles 
+              ADD CONSTRAINT chk_roles_name 
+              CHECK (name IN ('ROLE_USER', 'ROLE_ADMIN'));
+            comment: CHECK constraint для валидации значений enum RoleName
+
+
+

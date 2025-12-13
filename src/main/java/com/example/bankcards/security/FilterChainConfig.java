@@ -4,6 +4,8 @@ package com.example.bankcards.security;
 import com.example.bankcards.exception.GlobalExceptionHandler;
 import jakarta.servlet.FilterChain;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import tools.jackson.databind.ObjectMapper;
 
 import java.nio.file.AccessDeniedException;
+import java.util.List;
 
 @Configuration
 public class FilterChainConfig {
@@ -35,14 +38,12 @@ public class FilterChainConfig {
     GlobalExceptionHandler globalHandler;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity security) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity security, SecurityProperties properties) {
         security
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authenticationProvider(provider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> {
                     exception.authenticationEntryPoint((request, response, authException) -> {
                         var responseEntity = globalHandler.handleAuthException(authException);
@@ -64,9 +65,9 @@ public class FilterChainConfig {
                 .sessionManagement(sessionConfig ->
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/admin/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").hasAnyRole("ADMIN","USER")
-                        .requestMatchers("/auth/**", "/swagger-ui/**","/v3/api-docs/**","/swagger/**").permitAll()
+                        .requestMatchers(properties.getPublicPaths().toArray(new String[0])).permitAll()
                         .anyRequest().authenticated());
         return security.build();
     }

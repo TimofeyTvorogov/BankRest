@@ -1,0 +1,115 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-transfers-table
+      author: dev
+      changes:
+        - createTable:
+            tableName: transfers
+            schemaName: public
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: amount
+                  type: numeric(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: to_card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  defaultValue: "PENDING"
+              - column:
+                  name: initiated_by_user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+              - column:
+                  name: processed_at
+                  type: timestamp
+              - column:
+                  name: completed_at
+                  type: timestamp
+              - column:
+                  name: cancelled_at
+                  type: timestamp
+
+  - changeSet:
+      id: add-transfers-foreign-keys
+      author: dev
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: fk_transfers_from_card
+            baseTableName: transfers
+            baseColumnNames: from_card_id
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: fk_transfers_to_card
+            baseTableName: transfers
+            baseColumnNames: to_card_id
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: fk_transfers_initiated_by
+            baseTableName: transfers
+            baseColumnNames: initiated_by_user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: add-transfers-check-constraints
+      author: dev
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE transfers 
+              ADD CONSTRAINT chk_transfers_status 
+              CHECK (status IN ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED', 'REVERSED'));
+            comment: Проверка статуса перевода
+        - sql:
+            sql: |
+              ALTER TABLE transfers 
+              ADD CONSTRAINT chk_transfers_amount_positive 
+              CHECK (amount > 0);
+            comment: Проверка положительной суммы перевода
+        - sql:
+            sql: |
+              ALTER TABLE transfers 
+              ADD CONSTRAINT chk_transfers_different_cards 
+              CHECK (from_card_id != to_card_id);
+            comment: Проверка разных карт отправителя и получателя
